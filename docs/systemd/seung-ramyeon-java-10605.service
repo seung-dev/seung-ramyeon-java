@@ -1,0 +1,15 @@
+[Unit]
+Description=REST API Spring Boot Application
+After=syslog.target
+
+[Service]
+User=root
+WorkingDirectory=/apps/seung-ramyeon-java-10605
+ExecStart=/usr/bin/java -Dlog.path=/apps/logs/seung-ramyeon-java -Dconf.path=/apps/seung-ramyeon-java-10605 -Dspring.profiles.active=ops -Dserver.port=10605 -Xms256m -Xmx256m -Dfile.encoding=UTF-8 -jar /apps/seung-ramyeon-java-10605/seung-ramyeon-java.jar
+SuccessExitStatus=143
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
