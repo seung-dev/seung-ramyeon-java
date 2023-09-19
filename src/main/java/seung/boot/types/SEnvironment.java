@@ -1,4 +1,4 @@
-package seung.ramyeon.java.boot.types;
+package seung.boot.types;
 
 import org.springframework.core.env.Environment;
 

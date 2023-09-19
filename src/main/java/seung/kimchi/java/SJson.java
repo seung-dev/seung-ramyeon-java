@@ -38,7 +38,7 @@ public class SJson {
 				;
 	}// end of stringify
 	
-	public static SLinkedHashMap parse_json(String data) throws JsonMappingException, JsonProcessingException {
+	public static SLinkedHashMap parse(String data) throws JsonMappingException, JsonProcessingException {
 		if(data == null || "".equals(data)) {
 			return null;
 		}
@@ -56,6 +56,6 @@ public class SJson {
 						)
 				.readValue(data, SLinkedHashMap.class)
 				;
-	}// end of parse_json
+	}// end of parse
 	
 }

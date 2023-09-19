@@ -1,4 +1,4 @@
-package seung.ramyeon.java.boot.configuration;
+package seung.boot.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
@@ -10,9 +10,9 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
+import seung.boot.types.SEnvironment;
 import seung.kimchi.java.types.SBuildProperties;
 import seung.kimchi.java.types.SLinkedHashMap;
-import seung.ramyeon.java.boot.types.SEnvironment;
 
 @PropertySources({
 	@PropertySource(value = "classpath:profile-${spring.profiles.active}/s-application-${spring.profiles.active}.properties")

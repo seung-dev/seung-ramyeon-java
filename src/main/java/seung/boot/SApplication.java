@@ -1,4 +1,4 @@
-package seung.ramyeon.java;
+package seung.boot;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

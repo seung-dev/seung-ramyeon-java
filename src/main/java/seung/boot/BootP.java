@@ -1,4 +1,4 @@
-package seung.ramyeon.java.boot;
+package seung.boot;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -7,9 +7,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import seung.boot.types.SEnvironment;
 import seung.kimchi.java.types.SBuildProperties;
 import seung.kimchi.java.types.SLinkedHashMap;
-import seung.ramyeon.java.boot.types.SEnvironment;
 
 @Component
 @Slf4j

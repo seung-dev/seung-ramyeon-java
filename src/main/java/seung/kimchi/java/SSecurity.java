@@ -1,5 +1,6 @@
-package seung.kimchi.java.types;
+package seung.kimchi.java;
 
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -20,21 +21,29 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import seung.kimchi.java.types.SLinkedHashMap;
+
 public class SSecurity {
 
-	public final static String _SHA256 = "SHA-256";
+	public static final String _S_MD2 = "MD2";
+	public static final String _S_MD4 = "MD4";
+	public static final String _S_MD5 = "MD5";
+	public static final String _S_SHA1 = "SHA-1";
+	public static final String _S_SHA256 = "SHA-256";
+	public static final String _S_SHA512 = "SHA-512";
 	
-	public final static String _AES = "AES";
+	public final static String _S_AES = "AES";
 	
-	public final static String _AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
-	public final static String _RSA_ECB_PKCS1PADDING = "RSA/ECB/PKCS1Padding";
+	public final static String _S_AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
+	public final static String _S_RSA_ECB_PKCS1PADDING = "RSA/ECB/PKCS1Padding";
 	
-	private static final int _XXTEA_DELTA = 0x9E3779B9;
-	private static final int _XXTEA_BLOCK_SIZE = 8;
+	private static final int _S_XXTEA_DELTA = 0x9E3779B9;
+	private static final int _S_XXTEA_BLOCK_SIZE = 8;
 	
 	public static List<SLinkedHashMap> providers() {
 		List<SLinkedHashMap> providers = new ArrayList<>();
@@ -109,9 +118,40 @@ public class SSecurity {
 			) throws NoSuchAlgorithmException, NoSuchProviderException {
 		return digest(
 				data
-				, _SHA256//algorithm
+				, _S_SHA256//algorithm
 				);
 	}// end of digest
+	
+	public static byte[] hmac(
+			String algorithm
+			, String provider
+			, byte[] key
+			, byte[] message
+			) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+		
+		Mac mac = null;
+		
+		if(provider != null) {
+			mac = Mac.getInstance(algorithm, provider);
+		} else {
+			mac = Mac.getInstance(algorithm);
+		}
+		
+		SecretKeySpec secretKeySpec = new SecretKeySpec(key, algorithm);
+		
+		mac.init(secretKeySpec);
+		
+		return mac.doFinal(message);
+	}// end of hmac
+	public static byte[] hmac(
+			String algorithm
+			, String provider
+			, String key
+			, String message
+			, Charset charset
+			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException {
+		return hmac(algorithm, provider, key.getBytes(charset), message.getBytes(charset));
+	}// end of hmac
 	
 	public static byte[] encrypt(
 			byte[] data
@@ -170,7 +210,7 @@ public class SSecurity {
 		return encrypt(
 				data
 				, key
-				, _AES_CBC_PKCS5PADDING//transformation
+				, _S_AES_CBC_PKCS5PADDING//transformation
 				, null//algorithm_parameter_spec
 				, null//provider
 				);
@@ -233,7 +273,7 @@ public class SSecurity {
 		return decrypt(
 				data
 				, key
-				, _AES_CBC_PKCS5PADDING//transformation
+				, _S_AES_CBC_PKCS5PADDING//transformation
 				, null//algorithm_parameter_spec
 				, null//provider
 				);
@@ -248,7 +288,7 @@ public class SSecurity {
 	public static SecretKeySpec secret_key_spec(
 			byte[] key
 			) {
-		return new SecretKeySpec(key, _AES);
+		return new SecretKeySpec(key, _S_AES);
 	}// end of secret_key_spec
 	
 	public static byte[] secure_random_iv(
@@ -301,7 +341,7 @@ public class SSecurity {
 			int_array[i] = data.charAt(i * 4);
 			for(int j = 1; j < 4; j++) {
 				if(i * 4 + j < data_length) {
-					int_array[i] += (data.charAt(i * 4 + j) << (j * _XXTEA_BLOCK_SIZE));
+					int_array[i] += (data.charAt(i * 4 + j) << (j * _S_XXTEA_BLOCK_SIZE));
 				}
 			}
 		}
@@ -323,7 +363,7 @@ public class SSecurity {
 		for(int i = 0; i < int_array_length; i++) {
 			byte_array[i * 4] = Long.valueOf((int_array[i] & 0xff)).byteValue();
 			for(int j = 1; j < 4; j++) {
-				byte_array[i * 4 + j] = Long.valueOf((int_array[i] >>> (j * _XXTEA_BLOCK_SIZE) & 0xff)).byteValue();
+				byte_array[i * 4 + j] = Long.valueOf((int_array[i] >>> (j * _S_XXTEA_BLOCK_SIZE) & 0xff)).byteValue();
 			}
 		}
 		return byte_array;
@@ -347,7 +387,7 @@ public class SSecurity {
 		int e = 0;
 		int sum = 0;
 		while(q-- > 0) {
-			sum += _XXTEA_DELTA;
+			sum += _S_XXTEA_DELTA;
 			e = (int) sum >>> 2 & 3;
 			for(int p = 0; p < n; p++) {
 				y = v[(p + 1) % n];
@@ -385,7 +425,7 @@ public class SSecurity {
 		int n = v.length;
 		int q = (int) Math.floor(6 + 52 / n);
 		int z = v[n - 1], y = v[0];
-		int mx, e, sum = Long.valueOf(q * _XXTEA_DELTA).intValue();
+		int mx, e, sum = Long.valueOf(q * _S_XXTEA_DELTA).intValue();
 		while(sum != 0) {
 			e = sum >>> 2 & 3;
 			for(int p = n - 1; p >= 0; p--) {
@@ -393,7 +433,7 @@ public class SSecurity {
 				mx = ((int) z >>> 5 ^ (int) y << 2) + ((int) y >>> 3 ^ (int) z << 4) ^ (sum ^ (int) y) + ((int) k[p & 3 ^ e] ^ (int) z);
 				y = v[p] -= mx;
 			}
-			sum -= _XXTEA_DELTA;
+			sum -= _S_XXTEA_DELTA;
 		}
 		return v;
 	}// end of xxtea_decrypt
